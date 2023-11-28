@@ -48,9 +48,10 @@ if 'wp-admin' in login_response.url:
                 input_2 = columns[2].find('input')
                 input_3 = columns[3].find('input')
 
-                if input_2 and input_3:
-                    in_running_condition = int(input_2.get('value', 0))
-                    not_running_condition = int(input_3.get('value', 0))
+                # Check if the 'value' attribute is present before converting to int
+                if input_2 and input_3 and 'value' in input_2.attrs and 'value' in input_3.attrs:
+                    in_running_condition = int(input_2['value'] or 0)
+                    not_running_condition = int(input_3['value'] or 0)
 
                     # Append the data to the list
                     data.append({
