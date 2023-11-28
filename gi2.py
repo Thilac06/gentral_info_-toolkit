@@ -24,6 +24,12 @@ if 'wp-admin' in login_response.url:
     if target_response.status_code == 200:
         soup = BeautifulSoup(target_response.content, 'html.parser')
         table = soup.find('table', {'id': 'table26'})
+        x, y, z = 'Local Authority', 'Other Key', 'Another Key'
+        local_authority_info = {cols[0].text.strip(): cols[1].text.strip() for cols in [row.find_all('td') for row in soup.find('table').find_all('tr') if len(row.find_all('td')) == 2]}
+
+        N = (local_authority_info.get(x, f"{x} not found"))
+        
+
 
         data = []
 
@@ -41,14 +47,14 @@ if 'wp-admin' in login_response.url:
                     not_running_condition = int(input_3['value']) if input_3['value'].isdigit() else None
 
                 data.append({
-                    'In Running Condition': in_running_condition,
-                    'Not Running Condition': not_running_condition
+                    f'In Running Condition:_{N}': in_running_condition,
+                    f'Not Running Condition:_{N}': not_running_condition
                 })
 
         if data:
             # Check if the Excel file exists, if not create a new one
             try:
-                df = pd.read_excel('output_data.xlsx')
+                df = pd.read_excel('rutput_data.xlsx')
             except FileNotFoundError:
                 df = pd.DataFrame()
 
@@ -56,7 +62,7 @@ if 'wp-admin' in login_response.url:
             df = pd.concat([df, new_data], axis=1)
 
             # Save the DataFrame to an Excel file
-            df.to_excel('output_data.xlsx', index=False)
+            df.to_excel('rutput_data.xlsx', index=False)
             print("Data saved to output_data.xlsx")
         else:
             print("No data to display.")
